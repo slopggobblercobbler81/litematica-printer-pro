@@ -151,3 +151,8 @@ Compiled jar files are located in `build/libs/`.
 ## 📄 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+
+## Configuration & Mod Menu Integration
+
+Litematica Printer Pro provides full integration with **Mod Menu** and MaLiLib. You can access configuration settings directly from the Mod Menu mod list or via Litematica's in-game config menu (M + C).
