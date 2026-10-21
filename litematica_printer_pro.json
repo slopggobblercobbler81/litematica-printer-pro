@@ -1,0 +1,14 @@
+{
+  "printerEnabled": true,
+  "placementRange": 4.5,
+  "blocksPerTick": 2,
+  "placementIntervalTicks": 1,
+  "smartRotationEnabled": true,
+  "carpetAccuratePlacement": true,
+  "inventoryBufferCache": true,
+  "breakWrongBlocks": false,
+  "strictRaycast": true,
+  "showHud": true,
+  "hudPosX": 10,
+  "hudPosY": 10
+}
