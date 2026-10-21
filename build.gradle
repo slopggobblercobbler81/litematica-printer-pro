@@ -16,10 +16,7 @@ repositories {
         name = "Fabric"
         url = "https://maven.fabricmc.net/"
     }
-    maven {
-        name = "Masa Maven"
-        url = "https://masa.dy.fi/maven"
-    }
+    
     maven {
         name = "Modrinth"
         url = "https://api.modrinth.com/maven"
@@ -47,8 +44,9 @@ dependencies {
 
     // MaLiLib & Litematica
     // Masa's official releases or modrinth/cursemaven artifacts
-    modImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
-    modImplementation "fi.dy.masa.litematica:litematica-fabric-${project.minecraft_version}:${project.litematica_version}"
+    modImplementation "maven.modrinth:malilib:${project.malilib_version}"
+    modImplementation "maven.modrinth:litematica:${project.litematica_version}"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
 }
 
 processResources {
@@ -93,4 +91,6 @@ publishing {
     }
 }
 
-junitPlatform { platforms { junitJupiter { enabled = true } } }
+test {
+    useJUnitPlatform()
+}

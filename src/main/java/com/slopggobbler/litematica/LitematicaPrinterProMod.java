@@ -34,6 +34,7 @@ public class LitematicaPrinterProMod implements ModInitializer, ClientModInitial
 
     @Override
     public void onInitializeClient() {
+        instance = this;
         LOGGER.info("[{}] Initializing Fabric client integration...", MOD_NAME);
 
         // Load configuration

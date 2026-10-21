@@ -1,39 +1,36 @@
 {
-    "schemaVersion":  1,
-    "id":  "litematica_printer_pro",
-    "version":  "${version}",
-    "name":  "Litematica Printer Pro",
-    "description":  "High-performance Litematica companion mod adding smart auto-placement, accurate block rotation resolution, and inventory buffer caching for Fabric.",
-    "authors":  [
-                    "slopggobblercobbler81"
-                ],
-    "contact":  {
-                    "homepage":  "https://github.com/slopggobblercobbler81/litematica-printer-pro",
-                    "sources":  "https://github.com/slopggobblercobbler81/litematica-printer-pro",
-                    "issues":  "https://github.com/slopggobblercobbler81/litematica-printer-pro/issues"
-                },
-    "license":  "MIT",
-    "icon":  "assets/litematica_printer_pro/icon.png",
-    "environment":  "*",
-    "entrypoints":  {
-                        "main":  [
-                                     "com.slopggobbler.litematica.LitematicaPrinterProMod"
-                                 ],
-                        "client":  [
-                                       "com.slopggobbler.litematica.LitematicaPrinterProMod"
-                                   ],
-                        "modmenu":  [
-                                        "com.slopggobbler.litematica.compat.ModMenuIntegration"
-                                    ]
-                    },
-    "depends":  {
-                    "fabricloader":  "\u003e=0.16.0",
-                    "fabric":  "*",
-                    "minecraft":  "\u003e=1.21 \u003c=1.21.4",
-                    "litematica":  "*",
-                    "malilib":  "*"
-                },
-    "suggests":  {
-                     "carpet":  "*"
-                 }
+    "schemaVersion": 1,
+    "id": "litematica_printer_pro",
+    "version": "${version}",
+    "name": "Litematica Printer Pro",
+    "description": "High-performance Litematica companion mod adding smart auto-placement, accurate block rotation resolution, and inventory buffer caching for Fabric.",
+    "authors": [
+        "slopggobblercobbler81"
+    ],
+    "contact": {
+        "homepage": "https://github.com/slopggobblercobbler81/litematica-printer-pro",
+        "sources": "https://github.com/slopggobblercobbler81/litematica-printer-pro",
+        "issues": "https://github.com/slopggobblercobbler81/litematica-printer-pro/issues"
+    },
+    "license": "MIT",
+    "icon": "assets/litematica_printer_pro/icon.png",
+    "environment": "client",
+    "entrypoints": {
+        "client": [
+            "com.slopggobbler.litematica.LitematicaPrinterProMod"
+        ],
+        "modmenu": [
+            "com.slopggobbler.litematica.compat.ModMenuIntegration"
+        ]
+    },
+    "depends": {
+        "fabricloader": ">=0.16.0",
+        "fabric": "*",
+        "minecraft": ">=1.21 <=26.3",
+        "litematica": "*",
+        "malilib": "*"
+    },
+    "suggests": {
+        "carpet": "*"
+    }
 }
