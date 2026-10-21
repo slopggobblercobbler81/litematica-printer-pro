@@ -23,6 +23,7 @@ def main():
             
     assert data.get("id") == "litematica_printer_pro"
     assert data.get("depends", {}).get("minecraft") == "26.3", f"Expected minecraft 26.3, got {data.get('depends', {}).get('minecraft')}"
+    assert "fabric" not in data.get("depends", {}), "fabric meta-mod should not be in mandatory depends"
     assert "com.slopggobbler.litematica.LitematicaPrinterProMod" in data["entrypoints"]["client"]
     assert "com.slopggobbler.litematica.compat.ModMenuIntegration" in data["entrypoints"]["modmenu"]
     print("  [OK] fabric.mod.json schema verified successfully (Targeting Minecraft 26.3).")

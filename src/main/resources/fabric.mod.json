@@ -26,12 +26,15 @@
     },
     "depends": {
         "fabricloader": ">=0.16.0",
-        "fabric": "*",
-        "minecraft": "26.3",
-        "litematica": "*",
-        "malilib": "*"
+        "minecraft": "26.3"
     },
     "suggests": {
         "carpet": "*"
+    },
+    "recommends": {
+        "fabric-api": "*",
+        "fabric": "*",
+        "litematica": "*",
+        "malilib": "*"
     }
 }
