@@ -92,3 +92,5 @@ publishing {
         // Target publishing repository if needed
     }
 }
+
+junitPlatform { platforms { junitJupiter { enabled = true } } }
