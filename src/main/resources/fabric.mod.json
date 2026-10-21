@@ -21,6 +21,9 @@
     ],
     "client": [
       "com.slopggobbler.litematica.LitematicaPrinterProMod"
+    ],
+    "modmenu": [
+      "com.slopggobbler.litematica.compat.ModMenuIntegration"
     ]
   },
   "depends": {
