@@ -22,9 +22,10 @@ def main():
             sys.exit(1)
             
     assert data.get("id") == "litematica_printer_pro"
+    assert data.get("depends", {}).get("minecraft") == "26.3", f"Expected minecraft 26.3, got {data.get('depends', {}).get('minecraft')}"
     assert "com.slopggobbler.litematica.LitematicaPrinterProMod" in data["entrypoints"]["client"]
     assert "com.slopggobbler.litematica.compat.ModMenuIntegration" in data["entrypoints"]["modmenu"]
-    print("  [OK] fabric.mod.json schema verified successfully.")
+    print("  [OK] fabric.mod.json schema verified successfully (Targeting Minecraft 26.3).")
 
     # 2. Check that source file for entrypoint exists and implements ClientModInitializer
     java_src_path = os.path.join(workspace_dir, "src", "main", "java", "com", "slopggobbler", "litematica", "LitematicaPrinterProMod.java")
