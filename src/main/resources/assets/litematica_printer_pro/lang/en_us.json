@@ -1,0 +1,61 @@
+{
+  "modmenu.nameTranslation.litematica_printer_pro": "Litematica Printer Pro",
+  "modmenu.descriptionTranslation.litematica_printer_pro": "High-performance Litematica companion mod adding smart auto-placement, accurate block rotation resolution, and inventory buffer caching for Fabric.",
+
+  "litematica_printer_pro.title": "Litematica Printer Pro",
+  "litematica_printer_pro.description": "High-performance schematic printing companion engine.",
+
+  "litematica_printer_pro.config.category.generic": "Generic Settings",
+  "litematica_printer_pro.config.category.placement": "Placement Engine",
+  "litematica_printer_pro.config.category.rotation": "Rotation & Protocols",
+  "litematica_printer_pro.config.category.inventory": "Inventory Caching",
+  "litematica_printer_pro.config.category.hotkeys": "Hotkeys & Keybinds",
+  "litematica_printer_pro.config.category.visuals": "HUD & Visuals",
+
+  "litematica_printer_pro.config.printer_enabled": "Enable Printer",
+  "litematica_printer_pro.config.printer_enabled.comment": "Toggle automatic schematic block placement on or off.",
+
+  "litematica_printer_pro.config.placement_range": "Placement Reach Range",
+  "litematica_printer_pro.config.placement_range.comment": "Maximum spherical distance in blocks from the player within which blocks will be auto-placed.",
+
+  "litematica_printer_pro.config.blocks_per_tick": "Blocks Per Tick",
+  "litematica_printer_pro.config.blocks_per_tick.comment": "Maximum number of blocks placed in a single client game tick (1-20).",
+
+  "litematica_printer_pro.config.placement_interval": "Placement Interval (Ticks)",
+  "litematica_printer_pro.config.placement_interval.comment": "Tick delay between successive placement burst executions.",
+
+  "litematica_printer_pro.config.smart_rotation": "Smart Rotation Resolution",
+  "litematica_printer_pro.config.smart_rotation.comment": "Calculates exact hit vectors and player angles for directional blocks (stairs, slabs, observers, pistons, hoppers).",
+
+  "litematica_printer_pro.config.carpet_accurate_placement": "Carpet Accurate Placement Protocol",
+  "litematica_printer_pro.config.carpet_accurate_placement.comment": "Encodes block facing and properties into the interaction packet hit vector using Carpet/Masa protocol.",
+
+  "litematica_printer_pro.config.inventory_buffer_cache": "Inventory Buffer Caching",
+  "litematica_printer_pro.config.inventory_buffer_cache.comment": "Fast-swap needed items into the hotbar from main inventory and shulker box cache.",
+
+  "litematica_printer_pro.config.break_wrong_blocks": "Break Wrong Blocks",
+  "litematica_printer_pro.config.break_wrong_blocks.comment": "Automatically breaks incorrectly placed or obstructing blocks if enabled.",
+
+  "litematica_printer_pro.config.strict_raycast": "Strict Raycast Line-of-Sight",
+  "litematica_printer_pro.config.strict_raycast.comment": "Enforces that the placement face has a direct visible line of sight from the camera.",
+
+  "litematica_printer_pro.config.show_hud": "Show Printer HUD",
+  "litematica_printer_pro.config.show_hud.comment": "Displays placement speed, queue depth, and printer status on screen.",
+
+  "key.litematica_printer_pro.category": "Litematica Printer Pro",
+  "key.litematica_printer_pro.toggle_printer": "Toggle Printer Active",
+  "key.litematica_printer_pro.open_config": "Open Printer Configuration GUI",
+  "key.litematica_printer_pro.cycle_speed": "Cycle Placement Speed",
+
+  "litematica_printer_pro.hud.status.active": "PRINTER: ACTIVE",
+  "litematica_printer_pro.hud.status.paused": "PRINTER: PAUSED",
+  "litematica_printer_pro.hud.status.disabled": "PRINTER: OFF",
+  "litematica_printer_pro.hud.queue": "Queue: %d blocks",
+  "litematica_printer_pro.hud.rate": "Rate: %d bpt (%d bps)",
+  "litematica_printer_pro.hud.missing": "Missing: %s",
+
+  "litematica_printer_pro.msg.printer_enabled": "§6[PrinterPro]§r Auto-placement §aENABLED§r (%d blocks/tick)",
+  "litematica_printer_pro.msg.printer_disabled": "§6[PrinterPro]§r Auto-placement §cDISABLED§r",
+  "litematica_printer_pro.msg.missing_items": "§6[PrinterPro]§e Missing item in inventory: §f%s",
+  "litematica_printer_pro.msg.placement_complete": "§6[PrinterPro]§a Schematic placement finished! Placed: %d blocks"
+}
