@@ -70,7 +70,7 @@ public class LitematicaBridge {
         if (!litematicaAvailable) return false;
         try {
             SchematicPlacementManager manager = DataManager.getSchematicPlacementManager();
-            return manager != null && !manager.getAllPlacements().isEmpty();
+            return manager != null && !manager.getAllSchematicsPlacements().isEmpty();
         } catch (Throwable t) {
             return false;
         }

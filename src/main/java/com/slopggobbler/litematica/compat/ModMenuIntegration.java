@@ -11,6 +11,10 @@ public class ModMenuIntegration implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> new GuiConfigs(parent);
+        return parent -> {
+            GuiConfigs gui = new GuiConfigs();
+            gui.setParent(parent);
+            return gui;
+        };
     }
 }

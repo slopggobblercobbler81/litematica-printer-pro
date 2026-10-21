@@ -11,6 +11,11 @@ base {
 }
 
 repositories {
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+
     mavenCentral()
     maven {
         name = "Fabric"
@@ -34,6 +39,9 @@ repositories {
 }
 
 dependencies {
+    // ModMenu integration
+    modCompileOnly("com.terraformersmc:modmenu:7.2.2")
+
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
@@ -87,6 +95,11 @@ publishing {
     }
 
     repositories {
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+
         // Target publishing repository if needed
     }
 }
