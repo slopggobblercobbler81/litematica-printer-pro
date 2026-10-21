@@ -70,7 +70,9 @@ public class SmartPlacementEngine {
         PrinterConfig config = PrinterConfig.getInstance();
 
         inventoryCache.updateCache(player, tickCounter);
-        missingItems.clear();
+        synchronized (missingItems) {
+            missingItems.clear();
+        }
 
         // 1. Scan and collect placement candidates
         List<PlacementCandidate> candidates = scanCandidates(client, player, world, config);
@@ -99,7 +101,9 @@ public class SmartPlacementEngine {
             if (!inventoryCache.ensureHeldItem(client, player, candidate.schematicState)) {
                 Item needed = inventoryCache.getRequiredItem(candidate.schematicState);
                 if (needed != null) {
-                    missingItems.add(needed);
+                    synchronized (missingItems) {
+                        missingItems.add(needed);
+                    }
                 }
                 continue;
             }
@@ -230,6 +234,24 @@ public class SmartPlacementEngine {
     public int getTotalPlacedBlocks() { return totalPlacedBlocks; }
     public int getQueueSize() { return queueSize; }
     public int getBlocksPerSecond() { return lastSecondPlacedCount; }
-    public Set<Item> getMissingItems() { return Collections.unmodifiableSet(missingItems); }
+    public Set<Item> getMissingItems() {
+        synchronized (missingItems) {
+            return new HashSet<>(missingItems);
+        }
+    }
     public void resetTotal() { this.totalPlacedBlocks = 0; }
+
+    /**
+     * Resets placement queue metrics, rolling counters, and inventory slot caches.
+     */
+    public void reset() {
+        this.queueSize = 0;
+        this.cooldown = 0;
+        this.lastSecondPlacedCount = 0;
+        this.currentSecondPlacedCounter = 0;
+        synchronized (this.missingItems) {
+            this.missingItems.clear();
+        }
+        this.inventoryCache.clear();
+    }
 }

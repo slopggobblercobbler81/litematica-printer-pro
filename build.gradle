@@ -10,6 +10,10 @@ base {
     archivesName = project.archives_base_name
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/litematica_printer_pro.accesswidener")
+}
+
 repositories {
     maven {
         name = "TerraformersMC"
@@ -106,4 +110,5 @@ publishing {
 
 test {
     useJUnitPlatform()
+    jvmArgs '-Xverify:none'
 }

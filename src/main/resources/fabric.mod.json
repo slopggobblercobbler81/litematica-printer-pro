@@ -15,6 +15,7 @@
     "license": "MIT",
     "icon": "assets/litematica_printer_pro/icon.png",
     "environment": "client",
+    "accessWidener": "litematica_printer_pro.accesswidener",
     "entrypoints": {
         "client": [
             "com.slopggobbler.litematica.LitematicaPrinterProMod"

@@ -35,7 +35,7 @@ def main():
     with open(java_src_path, "r", encoding="utf-8") as f:
         content = f.read()
         
-    if "implements ModInitializer, ClientModInitializer" not in content:
+    if "implements ClientModInitializer" not in content and "implements ModInitializer, ClientModInitializer" not in content:
         print("Error: LitematicaPrinterProMod does not implement ClientModInitializer correctly!")
         sys.exit(1)
     print("  [OK] Entrypoint class source verification passed.")

@@ -18,7 +18,7 @@ public class ClientKeybindHandler {
     private static KeyBinding togglePrinterKey;
     private static KeyBinding cycleSpeedKey;
 
-    public static void register(SmartPlacementEngine engine) {
+    public static void register() {
         togglePrinterKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.litematica_printer_pro.toggle_printer",
                 InputUtil.Type.KEYSYM,
@@ -32,43 +32,50 @@ public class ClientKeybindHandler {
                 GLFW.GLFW_KEY_B,
                 KEY_CATEGORY
         ));
+    }
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.player == null) return;
+    public static void register(SmartPlacementEngine engine) {
+        register();
+    }
 
-            while (togglePrinterKey.wasPressed()) {
-                PrinterConfig config = PrinterConfig.getInstance();
-                boolean newState = !config.isPrinterEnabled();
-                config.setPrinterEnabled(newState);
+    /**
+     * Polls keybinding presses before placement engine processing.
+     */
+    public static void onClientTick(net.minecraft.client.MinecraftClient client) {
+        if (client.player == null || client.currentScreen != null) return;
 
-                if (newState) {
-                    client.player.sendMessage(
-                            Text.translatable("litematica_printer_pro.msg.printer_enabled", config.getBlocksPerTick()),
-                            true
-                    );
-                } else {
-                    client.player.sendMessage(
-                            Text.translatable("litematica_printer_pro.msg.printer_disabled"),
-                            true
-                    );
-                }
-            }
+        while (togglePrinterKey != null && togglePrinterKey.wasPressed()) {
+            PrinterConfig config = PrinterConfig.getInstance();
+            boolean newState = !config.isPrinterEnabled();
+            config.setPrinterEnabled(newState);
 
-            while (cycleSpeedKey.wasPressed()) {
-                PrinterConfig config = PrinterConfig.getInstance();
-                int current = config.getBlocksPerTick();
-                int next = switch (current) {
-                    case 1 -> 3;
-                    case 3 -> 5;
-                    case 5 -> 10;
-                    default -> 1;
-                };
-                config.setBlocksPerTick(next);
+            if (newState) {
                 client.player.sendMessage(
-                        Text.literal("§6[PrinterPro]§r Placement speed set to §b" + next + "§r blocks/tick"),
+                        Text.translatable("litematica_printer_pro.msg.printer_enabled", config.getBlocksPerTick()),
+                        true
+                );
+            } else {
+                client.player.sendMessage(
+                        Text.translatable("litematica_printer_pro.msg.printer_disabled"),
                         true
                 );
             }
-        });
+        }
+
+        while (cycleSpeedKey != null && cycleSpeedKey.wasPressed()) {
+            PrinterConfig config = PrinterConfig.getInstance();
+            int current = config.getBlocksPerTick();
+            int next = switch (current) {
+                case 1 -> 3;
+                case 3 -> 5;
+                case 5 -> 10;
+                default -> 1;
+            };
+            config.setBlocksPerTick(next);
+            client.player.sendMessage(
+                    Text.literal("§6[PrinterPro]§r Placement speed set to §b" + next + "§r blocks/tick"),
+                    true
+            );
+        }
     }
 }

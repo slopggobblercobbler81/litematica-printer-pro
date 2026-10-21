@@ -20,3 +20,6 @@ bin/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Test & runtime config
+/config/

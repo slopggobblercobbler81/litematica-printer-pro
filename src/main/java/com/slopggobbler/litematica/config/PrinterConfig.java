@@ -154,12 +154,14 @@ public class PrinterConfig {
     public File getConfigFile() {
         File configDir = null;
         try {
-            if (FabricLoader.getInstance() != null) {
+            if (FabricLoader.getInstance() != null && FabricLoader.getInstance().getConfigDir() != null) {
                 configDir = FabricLoader.getInstance().getConfigDir().toFile();
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+            // Running outside FabricLoader runtime environment (e.g. standalone JUnit test)
+        }
         if (configDir == null) {
-            configDir = new File("build/test-config");
+            configDir = new File("config");
         }
         return new File(configDir, CONFIG_FILENAME);
     }

@@ -139,4 +139,14 @@ public class InventoryCacheManager {
     public int getShulkerStockCount(Item item) {
         return shulkerBoxCache.getOrDefault(item, 0);
     }
+
+    /**
+     * Clears cached slot mappings and container contents.
+     */
+    public void clear() {
+        hotbarSlotCache.clear();
+        inventorySlotCache.clear();
+        shulkerBoxCache.clear();
+        lastScanTick = -1;
+    }
 }
