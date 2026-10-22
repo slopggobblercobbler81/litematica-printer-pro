@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
  * accurate block rotation resolution, and inventory buffer caching.
  */
 public class LitematicaPrinterProMod implements ClientModInitializer {
-    public static final String MOD_ID = "litematica_printer_pro";
-    public static final String MOD_NAME = "Litematica Printer Pro";
+    public static final String MOD_ID = "litebuilder";
+    public static final String MOD_NAME = "LiteBuilder";
     public static final String MOD_VERSION = "1.0.0";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 

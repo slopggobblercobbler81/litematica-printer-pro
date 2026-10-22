@@ -3,6 +3,7 @@ import glob
 import subprocess
 import zipfile
 import hashlib
+import shutil
 
 def main():
     root = os.path.abspath("D:/GEMINI AGY/workspaces/litematica-printer-pro")
@@ -17,7 +18,7 @@ def main():
     for f in glob.glob(os.path.join(libs_dir, '**', '*.jar'), recursive=True):
         cp_jars.append(f)
     for f in glob.glob(os.path.join(mods_dir, '*.jar')):
-        if 'printer' not in f.lower():
+        if 'printer' not in f.lower() and 'litebuilder' not in f.lower():
             cp_jars.append(f)
     for f in glob.glob(os.path.join(mc_dir, '.fabric', 'processedMods', '*.jar')):
         cp_jars.append(f)
@@ -58,13 +59,15 @@ def main():
         return False
     print("Compilation SUCCESSFUL!")
 
-    # Now package the JAR
-    jar_path_versioned = os.path.join(root, 'build', 'libs', 'litematica-printer-pro-26.3-1.0.0.jar')
-    jar_path_unversioned = os.path.join(root, 'build', 'libs', 'litematica-printer-pro-1.0.0.jar')
-    mc_mods_jar = os.path.join(mods_dir, 'litematica-printer-pro-26.3-1.0.0.jar')
-    os.makedirs(os.path.dirname(jar_path_versioned), exist_ok=True)
+    # Package the JAR
+    jar_litebuilder = os.path.join(root, 'build', 'libs', 'litebuilder-1.0.0.jar')
+    jar_litebuilder_263 = os.path.join(root, 'build', 'libs', 'litebuilder-26.3-1.0.0.jar')
+    jar_printer_compat = os.path.join(root, 'build', 'libs', 'litematica-printer-pro-26.3-1.0.0.jar')
+    mc_mods_jar = os.path.join(mods_dir, 'litebuilder-26.3-1.0.0.jar')
+    mc_mods_printer = os.path.join(mods_dir, 'litematica-printer-pro-26.3-1.0.0.jar')
+    os.makedirs(os.path.dirname(jar_litebuilder), exist_ok=True)
 
-    with zipfile.ZipFile(jar_path_versioned, 'w', zipfile.ZIP_DEFLATED) as zf:
+    with zipfile.ZipFile(jar_litebuilder, 'w', zipfile.ZIP_DEFLATED) as zf:
         # Add class files
         for r, d, files in os.walk(out_classes):
             for file in files:
@@ -83,16 +86,18 @@ def main():
         # Add LICENSE
         license_path = os.path.join(root, 'LICENSE')
         if os.path.exists(license_path):
-            zf.write(license_path, 'LICENSE_litematica-printer-pro')
+            zf.write(license_path, 'LICENSE_litebuilder')
 
-    import shutil
-    shutil.copyfile(jar_path_versioned, jar_path_unversioned)
-    shutil.copyfile(jar_path_versioned, mc_mods_jar)
+    shutil.copyfile(jar_litebuilder, jar_litebuilder_263)
+    shutil.copyfile(jar_litebuilder, jar_printer_compat)
+    shutil.copyfile(jar_litebuilder, mc_mods_jar)
+    shutil.copyfile(jar_litebuilder, mc_mods_printer)
 
     # Compute checksum
-    h = hashlib.sha256(open(jar_path_versioned, 'rb').read()).hexdigest()
+    h = hashlib.sha256(open(jar_litebuilder, 'rb').read()).hexdigest()
     with open(os.path.join(root, 'build', 'libs', 'CHECKSUMS.txt'), 'w', encoding='utf-8') as f:
-        f.write(f"{h}  litematica-printer-pro-1.0.0.jar\n")
+        f.write(f"{h}  litebuilder-1.0.0.jar\n")
+        f.write(f"{h}  litebuilder-26.3-1.0.0.jar\n")
         f.write(f"{h}  litematica-printer-pro-26.3-1.0.0.jar\n")
 
     print(f"Packaged JAR successfully! SHA256: {h}")

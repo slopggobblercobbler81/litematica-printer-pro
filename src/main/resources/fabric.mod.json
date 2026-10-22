@@ -1,9 +1,9 @@
 {
     "schemaVersion": 1,
-    "id": "litematica_printer_pro",
+    "id": "litebuilder",
     "version": "1.0.0",
-    "name": "Litematica Printer Pro",
-    "description": "High-performance Litematica companion mod adding smart auto-placement, accurate block rotation resolution, and inventory buffer caching for Fabric.",
+    "name": "LiteBuilder",
+    "description": "Client-side Fabric companion mod for Litematica adding automatic block placement, directional rotation protocols, and inventory restocking.",
     "authors": [
         "slopggobblercobbler81"
     ],
@@ -13,7 +13,7 @@
         "issues": "https://github.com/slopggobblercobbler81/litematica-printer-pro/issues"
     },
     "license": "MIT",
-    "icon": "assets/litematica_printer_pro/icon.png",
+    "icon": "assets/litebuilder/icon.png",
     "environment": "client",
     "entrypoints": {
         "client": [
@@ -25,7 +25,7 @@
     },
     "depends": {
         "fabricloader": ">=0.16.0",
-        "minecraft": "26.3"
+        "minecraft": ">=1.20.1"
     },
     "suggests": {
         "carpet": "*"

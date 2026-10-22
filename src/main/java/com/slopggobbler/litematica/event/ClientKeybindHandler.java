@@ -50,11 +50,11 @@ public class ClientKeybindHandler {
 
             if (newState) {
                 client.player.sendOverlayMessage(
-                        Component.literal("§a[PrinterPro]§r Auto-placement ENABLED (§b" + config.getBlocksPerTick() + "§r blocks/tick)")
+                        Component.literal("§a[LiteBuilder]§r Placement ENABLED (§b" + config.getBlocksPerTick() + "§r blocks/tick)")
                 );
             } else {
                 client.player.sendOverlayMessage(
-                        Component.literal("§7[PrinterPro]§r Auto-placement DISABLED")
+                        Component.literal("§7[LiteBuilder]§r Placement DISABLED")
                 );
             }
         }
@@ -70,7 +70,7 @@ public class ClientKeybindHandler {
             };
             config.setBlocksPerTick(next);
             client.player.sendOverlayMessage(
-                    Component.literal("§6[PrinterPro]§r Placement speed set to §b" + next + "§r blocks/tick")
+                    Component.literal("§6[LiteBuilder]§r Placement speed set to §b" + next + "§r blocks/tick")
             );
         }
     }
