@@ -2,19 +2,17 @@ package com.slopggobbler.litematica.compat;
 
 import fi.dy.masa.litematica.data.DataManager;
 import fi.dy.masa.litematica.schematic.placement.SchematicPlacementManager;
-import fi.dy.masa.litematica.schematic.placement.SubRegionPlacement;
 import fi.dy.masa.litematica.world.SchematicWorldHandler;
 import fi.dy.masa.litematica.world.WorldSchematic;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Clean compatibility bridge for Litematica schematic data.
- * Safe fallback handling for schematic world resolution.
+ * Clean compatibility bridge for Litematica schematic data on Minecraft 26.3.
  */
 public class LitematicaBridge {
     private static final Logger LOGGER = LoggerFactory.getLogger("LitematicaBridge");
@@ -37,14 +35,10 @@ public class LitematicaBridge {
 
     /**
      * Retrieves the target BlockState from the active schematic at the given world position.
-     *
-     * @param world Current client world.
-     * @param pos Target world coordinate.
-     * @return Expected BlockState from schematic, or Blocks.AIR.getDefaultState() if none.
      */
-    public static BlockState getSchematicBlockState(ClientWorld world, BlockPos pos) {
+    public static BlockState getSchematicBlockState(ClientLevel world, BlockPos pos) {
         if (!litematicaAvailable || world == null || pos == null) {
-            return Blocks.AIR.getDefaultState();
+            return Blocks.AIR.defaultBlockState();
         }
 
         try {
@@ -56,11 +50,10 @@ public class LitematicaBridge {
                 }
             }
         } catch (Throwable t) {
-            // Defensive logging on unexpected API changes
             LOGGER.debug("Schematic state lookup exception: {}", t.getMessage());
         }
 
-        return Blocks.AIR.getDefaultState();
+        return Blocks.AIR.defaultBlockState();
     }
 
     /**

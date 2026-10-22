@@ -1,22 +1,21 @@
 package com.slopggobbler.litematica.engine;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.ContainerComponent;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * High-performance inventory slot caching and hotbar buffer manager.
- * Reduces inventory scan overhead during rapid placement loops.
+ * High-performance inventory slot caching and hotbar buffer manager on Minecraft 26.3.
  */
 public class InventoryCacheManager {
     private final Map<Item, Integer> hotbarSlotCache = new HashMap<>();
@@ -24,10 +23,7 @@ public class InventoryCacheManager {
     private final Map<Item, Integer> shulkerBoxCache = new HashMap<>();
     private int lastScanTick = -1;
 
-    /**
-     * Refreshes the inventory slot cache if dirty or on a new tick.
-     */
-    public void updateCache(ClientPlayerEntity player, int currentTick) {
+    public void updateCache(LocalPlayer player, int currentTick) {
         if (lastScanTick == currentTick) {
             return;
         }
@@ -37,11 +33,11 @@ public class InventoryCacheManager {
         inventorySlotCache.clear();
         shulkerBoxCache.clear();
 
-        PlayerInventory inv = player.getInventory();
+        Inventory inv = player.getInventory();
 
         // Scan hotbar (slots 0-8)
         for (int i = 0; i < 9; i++) {
-            ItemStack stack = inv.getStack(i);
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 hotbarSlotCache.putIfAbsent(stack.getItem(), i);
             }
@@ -49,7 +45,7 @@ public class InventoryCacheManager {
 
         // Scan main inventory (slots 9-35)
         for (int i = 9; i < 36; i++) {
-            ItemStack stack = inv.getStack(i);
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
                 inventorySlotCache.putIfAbsent(stack.getItem(), i);
                 inspectShulkerBox(stack);
@@ -57,13 +53,10 @@ public class InventoryCacheManager {
         }
     }
 
-    /**
-     * Inspects container components (e.g. Shulker Boxes) for nested items.
-     */
     private void inspectShulkerBox(ItemStack stack) {
-        ContainerComponent container = stack.get(DataComponentTypes.CONTAINER);
+        ItemContainerContents container = stack.get(DataComponents.CONTAINER);
         if (container != null) {
-            container.stream().forEach(subStack -> {
+            container.nonEmptyItemCopyStream().forEach(subStack -> {
                 if (!subStack.isEmpty()) {
                     shulkerBoxCache.merge(subStack.getItem(), subStack.getCount(), Integer::sum);
                 }
@@ -71,62 +64,45 @@ public class InventoryCacheManager {
         }
     }
 
-    /**
-     * Finds the corresponding Item for the required BlockState.
-     */
     public Item getRequiredItem(BlockState state) {
         Block block = state.getBlock();
-        Item item = block.asItem();
-        return item;
+        return block.asItem();
     }
 
-    /**
-     * Ensures the player is holding the required item in main hand.
-     * Swaps from hotbar or main inventory if necessary.
-     *
-     * @return true if player now holds the required item in main hand.
-     */
-    public boolean ensureHeldItem(MinecraftClient client, ClientPlayerEntity player, BlockState state) {
+    public boolean ensureHeldItem(Minecraft client, LocalPlayer player, BlockState state) {
         Item requiredItem = getRequiredItem(state);
         if (requiredItem == null) {
             return false;
         }
 
-        // Check if currently holding it in main hand
-        if (player.getMainHandStack().isOf(requiredItem)) {
+        if (player.getMainHandItem().is(requiredItem)) {
             return true;
         }
 
-        // Check hotbar cache
         if (hotbarSlotCache.containsKey(requiredItem)) {
             int targetHotbarSlot = hotbarSlotCache.get(requiredItem);
-            player.getInventory().selectedSlot = targetHotbarSlot;
+            player.getInventory().setSelectedSlot(targetHotbarSlot);
             return true;
         }
 
-        // Check main inventory cache and swap into current hotbar slot
         if (inventorySlotCache.containsKey(requiredItem)) {
             int invSlot = inventorySlotCache.get(requiredItem);
-            swapToHotbar(client, player, invSlot, player.getInventory().selectedSlot);
+            swapToHotbar(client, player, invSlot, player.getInventory().getSelectedSlot());
             return true;
         }
 
         return false;
     }
 
-    /**
-     * Swaps an inventory slot with the active hotbar slot via client interaction manager.
-     */
-    private void swapToHotbar(MinecraftClient client, ClientPlayerEntity player, int fromSlot, int hotbarTarget) {
-        if (client.interactionManager == null) return;
+    private void swapToHotbar(Minecraft client, LocalPlayer player, int fromSlot, int hotbarTarget) {
+        if (client.gameMode == null) return;
 
-        // Protocol slot index for 3x9 inventory starts at 9
-        int syncId = player.currentScreenHandler.syncId;
-        client.interactionManager.clickSlot(
+        int syncId = player.containerMenu.containerId;
+        client.gameMode.handleContainerInput(
                 syncId,
                 fromSlot,
                 hotbarTarget,
-                SlotActionType.SWAP,
+                ContainerInput.SWAP,
                 player
         );
     }
@@ -140,9 +116,6 @@ public class InventoryCacheManager {
         return shulkerBoxCache.getOrDefault(item, 0);
     }
 
-    /**
-     * Clears cached slot mappings and container contents.
-     */
     public void clear() {
         hotbarSlotCache.clear();
         inventorySlotCache.clear();

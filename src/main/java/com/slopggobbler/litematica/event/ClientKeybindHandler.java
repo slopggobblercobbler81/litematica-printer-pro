@@ -1,36 +1,35 @@
 package com.slopggobbler.litematica.event;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.slopggobbler.litematica.config.PrinterConfig;
 import com.slopggobbler.litematica.engine.SmartPlacementEngine;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.Text;
+import fi.dy.masa.malilib.util.GuiUtils;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 /**
- * Handles client keybinds for toggling printer and adjusting settings on the fly.
+ * Handles client keybinds for toggling printer and adjusting settings on the fly for Minecraft 26.3.
  */
 public class ClientKeybindHandler {
-    private static final String KEY_CATEGORY = "key.litematica_printer_pro.category";
-
-    private static KeyBinding togglePrinterKey;
-    private static KeyBinding cycleSpeedKey;
+    private static KeyMapping togglePrinterKey;
+    private static KeyMapping cycleSpeedKey;
 
     public static void register() {
-        togglePrinterKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        togglePrinterKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.litematica_printer_pro.toggle_printer",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 GLFW.GLFW_KEY_V,
-                KEY_CATEGORY
+                KeyMapping.Category.MISC
         ));
 
-        cycleSpeedKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        cycleSpeedKey = KeyMappingHelper.registerKeyMapping(new KeyMapping(
                 "key.litematica_printer_pro.cycle_speed",
-                InputUtil.Type.KEYSYM,
+                InputConstants.Type.KEYBOARD,
                 GLFW.GLFW_KEY_B,
-                KEY_CATEGORY
+                KeyMapping.Category.MISC
         ));
     }
 
@@ -41,28 +40,26 @@ public class ClientKeybindHandler {
     /**
      * Polls keybinding presses before placement engine processing.
      */
-    public static void onClientTick(net.minecraft.client.MinecraftClient client) {
-        if (client.player == null || client.currentScreen != null) return;
+    public static void onClientTick(Minecraft client) {
+        if (client.player == null || GuiUtils.getCurrentScreen() != null) return;
 
-        while (togglePrinterKey != null && togglePrinterKey.wasPressed()) {
+        while (togglePrinterKey != null && togglePrinterKey.consumeClick()) {
             PrinterConfig config = PrinterConfig.getInstance();
             boolean newState = !config.isPrinterEnabled();
             config.setPrinterEnabled(newState);
 
             if (newState) {
-                client.player.sendMessage(
-                        Text.translatable("litematica_printer_pro.msg.printer_enabled", config.getBlocksPerTick()),
-                        true
+                client.player.sendOverlayMessage(
+                        Component.literal("§a[PrinterPro]§r Auto-placement ENABLED (§b" + config.getBlocksPerTick() + "§r blocks/tick)")
                 );
             } else {
-                client.player.sendMessage(
-                        Text.translatable("litematica_printer_pro.msg.printer_disabled"),
-                        true
+                client.player.sendOverlayMessage(
+                        Component.literal("§7[PrinterPro]§r Auto-placement DISABLED")
                 );
             }
         }
 
-        while (cycleSpeedKey != null && cycleSpeedKey.wasPressed()) {
+        while (cycleSpeedKey != null && cycleSpeedKey.consumeClick()) {
             PrinterConfig config = PrinterConfig.getInstance();
             int current = config.getBlocksPerTick();
             int next = switch (current) {
@@ -72,9 +69,8 @@ public class ClientKeybindHandler {
                 default -> 1;
             };
             config.setBlocksPerTick(next);
-            client.player.sendMessage(
-                    Text.literal("§6[PrinterPro]§r Placement speed set to §b" + next + "§r blocks/tick"),
-                    true
+            client.player.sendOverlayMessage(
+                    Component.literal("§6[PrinterPro]§r Placement speed set to §b" + next + "§r blocks/tick")
             );
         }
     }

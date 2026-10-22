@@ -1,39 +1,30 @@
 package com.slopggobbler.litematica.engine;
 
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 /**
- * Validates strict line-of-sight raycasting to ensure server-side anti-cheat compliance.
+ * Validates strict line-of-sight raycasting to ensure server-side anti-cheat compliance on 26.3.
  */
 public class RaycastValidator {
 
-    /**
-     * Checks if the player has an unobstructed line of sight to the target block.
-     *
-     * @param world Current client world.
-     * @param player Current player entity.
-     * @param targetPos Target block position.
-     * @param targetHitVec Specific point on the block face.
-     * @return true if ray reaches target position without hitting intermediate solid blocks.
-     */
-    public static boolean hasLineOfSight(ClientWorld world, ClientPlayerEntity player, BlockPos targetPos, Vec3d targetHitVec) {
-        Vec3d eyePos = player.getEyePos();
+    public static boolean hasLineOfSight(ClientLevel world, LocalPlayer player, BlockPos targetPos, Vec3 targetHitVec) {
+        Vec3 eyePos = player.getEyePosition();
 
-        RaycastContext context = new RaycastContext(
+        ClipContext context = new ClipContext(
                 eyePos,
                 targetHitVec,
-                RaycastContext.ShapeType.COLLIDER,
-                RaycastContext.FluidHandling.NONE,
+                ClipContext.Block.COLLIDER,
+                ClipContext.Fluid.NONE,
                 player
         );
 
-        BlockHitResult hit = world.raycast(context);
+        BlockHitResult hit = world.clip(context);
 
         if (hit.getType() == HitResult.Type.MISS) {
             return true;
@@ -41,7 +32,7 @@ public class RaycastValidator {
 
         if (hit.getType() == HitResult.Type.BLOCK) {
             BlockPos hitPos = hit.getBlockPos();
-            return hitPos.equals(targetPos) || world.getBlockState(hitPos).isReplaceable();
+            return hitPos.equals(targetPos) || world.getBlockState(hitPos).canBeReplaced();
         }
 
         return false;

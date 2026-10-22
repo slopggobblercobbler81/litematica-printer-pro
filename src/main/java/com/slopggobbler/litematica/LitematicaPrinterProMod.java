@@ -5,16 +5,20 @@ import com.slopggobbler.litematica.config.PrinterConfigHandler;
 import com.slopggobbler.litematica.engine.SmartPlacementEngine;
 import com.slopggobbler.litematica.event.ClientKeybindHandler;
 import com.slopggobbler.litematica.gui.PrinterHudOverlay;
+import fi.dy.masa.malilib.config.gui.GuiModConfigs;
+import fi.dy.masa.malilib.registry.Registry;
+import fi.dy.masa.malilib.util.data.ModInfo;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Main client entrypoint for Litematica Printer Pro.
+ * Main client entrypoint for Litematica Printer Pro on Minecraft 26.3.
  * High-performance Litematica companion mod adding smart auto-placement,
  * accurate block rotation resolution, and inventory buffer caching.
  */
@@ -37,18 +41,14 @@ public class LitematicaPrinterProMod implements ClientModInitializer {
             // Load configuration
             PrinterConfig.getInstance().loadConfig();
 
-            // Safely register PrinterConfigHandler with MaLiLib ConfigManager if available via reflection
+            // Register PrinterConfigHandler & Config Screen with MaLiLib if available
             try {
-                Class<?> configManagerClass = Class.forName("fi.dy.masa.malilib.config.ConfigManager");
-                Object configManagerInstance = configManagerClass.getMethod("getInstance").invoke(null);
-                Class<?> handlerClass = Class.forName("com.slopggobbler.litematica.config.PrinterConfigHandler");
-                Object handlerInstance = handlerClass.getMethod("getInstance").invoke(null);
-                Class<?> iConfigHandlerClass = Class.forName("fi.dy.masa.malilib.config.IConfigHandler");
-                configManagerClass.getMethod("registerConfigHandler", String.class, iConfigHandlerClass)
-                        .invoke(configManagerInstance, MOD_ID, handlerInstance);
-                LOGGER.info("[{}] Registered PrinterConfigHandler with MaLiLib ConfigManager.", MOD_NAME);
+                fi.dy.masa.malilib.config.ConfigManager.getInstance().registerConfigHandler(MOD_ID, PrinterConfigHandler.getInstance());
+                Registry.CONFIG_SCREEN.registerConfigScreenFactory(new ModInfo(MOD_ID, MOD_NAME, () ->
+                        new GuiModConfigs(MOD_ID, PrinterConfigHandler.OPTIONS, MOD_NAME)));
+                LOGGER.info("[{}] Registered PrinterConfigHandler & ConfigScreen with MaLiLib.", MOD_NAME);
             } catch (Throwable t) {
-                LOGGER.debug("[{}] MaLiLib ConfigManager integration deferred/unavailable: {}", MOD_NAME, t.getMessage());
+                LOGGER.debug("[{}] MaLiLib Config integration deferred/unavailable: {}", MOD_NAME, t.getMessage());
             }
 
             // Initialize engines
@@ -63,7 +63,7 @@ public class LitematicaPrinterProMod implements ClientModInitializer {
                 if (client.isPaused()) {
                     return;
                 }
-                if (client.world != null && client.player != null) {
+                if (client.level != null && client.player != null) {
                     ClientKeybindHandler.onClientTick(client);
                     this.placementEngine.onClientTick(client);
                 }
@@ -77,23 +77,23 @@ public class LitematicaPrinterProMod implements ClientModInitializer {
                 }
             });
 
-            ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> {
-                if (this.placementEngine != null) {
-                    LOGGER.info("[{}] Resetting placement engine & inventory cache on world transition.", MOD_NAME);
-                    this.placementEngine.reset();
-                }
-            });
-
-            // Register HUD rendering with defensive exception boundary
-            HudRenderCallback.EVENT.register((drawContext, renderTickCounter) -> {
-                if (this.hudOverlay != null) {
-                    try {
-                        this.hudOverlay.render(drawContext, renderTickCounter);
-                    } catch (Throwable t) {
-                        LOGGER.debug("[{}] Render HUD overlay exception: {}", MOD_NAME, t.getMessage());
-                    }
-                }
-            });
+            // Register HUD rendering with modern 26.3 HudElementRegistry
+            try {
+                HudElementRegistry.addLast(
+                        Identifier.fromNamespaceAndPath(MOD_ID, "hud"),
+                        (extractor, deltaTracker) -> {
+                            if (this.hudOverlay != null) {
+                                try {
+                                    this.hudOverlay.render(extractor, deltaTracker);
+                                } catch (Throwable t) {
+                                    LOGGER.debug("[{}] Render HUD overlay exception: {}", MOD_NAME, t.getMessage());
+                                }
+                            }
+                        }
+                );
+            } catch (Throwable t) {
+                LOGGER.warn("[{}] Failed to register HUD element: {}", MOD_NAME, t.getMessage());
+            }
 
             LOGGER.info("[{}] Successfully loaded and ready!", MOD_NAME);
         } catch (Throwable t) {
