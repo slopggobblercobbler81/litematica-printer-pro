@@ -44,7 +44,7 @@ public class PrinterConfigHandler implements IConfigHandler {
             "strictRaycast", false, "litematica_printer_pro.config.strict_raycast.comment");
 
     public static final ConfigBoolean SHOW_HUD = new ConfigBoolean(
-            "showHud", true, "litematica_printer_pro.config.show_hud.comment");
+            "showHud", false, "litematica_printer_pro.config.show_hud.comment");
 
     public static final List<IConfigBase> OPTIONS = new ArrayList<>();
 

@@ -23,3 +23,5 @@ Thumbs.db
 
 # Test & runtime config
 /config/
+logs/
+tmp_build/

@@ -11,9 +11,7 @@ import fi.dy.masa.malilib.util.data.ModInfo;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,24 +74,6 @@ public class LitematicaPrinterProMod implements ClientModInitializer {
                     this.placementEngine.reset();
                 }
             });
-
-            // Register HUD rendering with modern 26.3 HudElementRegistry
-            try {
-                HudElementRegistry.addLast(
-                        Identifier.fromNamespaceAndPath(MOD_ID, "hud"),
-                        (extractor, deltaTracker) -> {
-                            if (this.hudOverlay != null) {
-                                try {
-                                    this.hudOverlay.render(extractor, deltaTracker);
-                                } catch (Throwable t) {
-                                    LOGGER.debug("[{}] Render HUD overlay exception: {}", MOD_NAME, t.getMessage());
-                                }
-                            }
-                        }
-                );
-            } catch (Throwable t) {
-                LOGGER.warn("[{}] Failed to register HUD element: {}", MOD_NAME, t.getMessage());
-            }
 
             LOGGER.info("[{}] Successfully loaded and ready!", MOD_NAME);
         } catch (Throwable t) {

@@ -1,7 +1,7 @@
 {
     "schemaVersion": 1,
     "id": "litematica_printer_pro",
-    "version": "${version}",
+    "version": "1.0.0",
     "name": "Litematica Printer Pro",
     "description": "High-performance Litematica companion mod adding smart auto-placement, accurate block rotation resolution, and inventory buffer caching for Fabric.",
     "authors": [

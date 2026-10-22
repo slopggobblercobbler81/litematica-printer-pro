@@ -39,7 +39,7 @@ public class PrinterConfig {
     private boolean strictRaycast = false;
 
     // Visuals & HUD
-    private boolean showHud = true;
+    private boolean showHud = false;
     private int hudPosX = 10;
     private int hudPosY = 10;
 
@@ -144,7 +144,7 @@ public class PrinterConfig {
         options.add(new BooleanOption("inventoryBufferCache", "Cache inventory slots for instant hotbar swapping", true));
         options.add(new BooleanOption("breakWrongBlocks", "Break obstructing or incorrectly placed blocks", false));
         options.add(new BooleanOption("strictRaycast", "Require unobstructed line-of-sight to place blocks", false));
-        options.add(new BooleanOption("showHud", "Display printer status HUD on screen", true));
+        options.add(new BooleanOption("showHud", "Display printer status HUD on screen", false));
     }
 
     public List<ConfigOption<?>> getOptions() {
