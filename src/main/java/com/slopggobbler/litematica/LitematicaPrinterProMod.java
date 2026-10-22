@@ -33,63 +33,72 @@ public class LitematicaPrinterProMod implements ClientModInitializer {
         instance = this;
         LOGGER.info("[{}] Initializing Fabric client integration (v{})...", MOD_NAME, MOD_VERSION);
 
-        // Load configuration
-        PrinterConfig.getInstance().loadConfig();
-
-        // Safely register PrinterConfigHandler with MaLiLib ConfigManager if available
         try {
-            Class.forName("fi.dy.masa.malilib.config.ConfigManager");
-            fi.dy.masa.malilib.config.ConfigManager.getInstance().registerConfigHandler(MOD_ID, PrinterConfigHandler.getInstance());
-            LOGGER.info("[{}] Registered PrinterConfigHandler with MaLiLib ConfigManager.", MOD_NAME);
-        } catch (Throwable t) {
-            LOGGER.debug("[{}] MaLiLib ConfigManager integration deferred/unavailable: {}", MOD_NAME, t.getMessage());
-        }
+            // Load configuration
+            PrinterConfig.getInstance().loadConfig();
 
-        // Initialize engines
-        this.placementEngine = new SmartPlacementEngine();
-        this.hudOverlay = new PrinterHudOverlay(this.placementEngine);
-
-        // Register Keybindings
-        ClientKeybindHandler.register();
-
-        // Register unified client tick event (keybinds polled before placement engine tick; paused check)
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (client.isPaused()) {
-                return;
+            // Safely register PrinterConfigHandler with MaLiLib ConfigManager if available via reflection
+            try {
+                Class<?> configManagerClass = Class.forName("fi.dy.masa.malilib.config.ConfigManager");
+                Object configManagerInstance = configManagerClass.getMethod("getInstance").invoke(null);
+                Class<?> handlerClass = Class.forName("com.slopggobbler.litematica.config.PrinterConfigHandler");
+                Object handlerInstance = handlerClass.getMethod("getInstance").invoke(null);
+                Class<?> iConfigHandlerClass = Class.forName("fi.dy.masa.malilib.config.IConfigHandler");
+                configManagerClass.getMethod("registerConfigHandler", String.class, iConfigHandlerClass)
+                        .invoke(configManagerInstance, MOD_ID, handlerInstance);
+                LOGGER.info("[{}] Registered PrinterConfigHandler with MaLiLib ConfigManager.", MOD_NAME);
+            } catch (Throwable t) {
+                LOGGER.debug("[{}] MaLiLib ConfigManager integration deferred/unavailable: {}", MOD_NAME, t.getMessage());
             }
-            if (client.world != null && client.player != null) {
-                ClientKeybindHandler.onClientTick(client);
-                this.placementEngine.onClientTick(client);
-            }
-        });
 
-        // Register world transition listeners to reset inventory cache and queue stats
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            if (this.placementEngine != null) {
-                LOGGER.info("[{}] Resetting placement engine & inventory cache on server disconnect.", MOD_NAME);
-                this.placementEngine.reset();
-            }
-        });
+            // Initialize engines
+            this.placementEngine = new SmartPlacementEngine();
+            this.hudOverlay = new PrinterHudOverlay(this.placementEngine);
 
-        ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> {
-            if (this.placementEngine != null) {
-                LOGGER.info("[{}] Resetting placement engine & inventory cache on world transition.", MOD_NAME);
-                this.placementEngine.reset();
-            }
-        });
+            // Register Keybindings
+            ClientKeybindHandler.register();
 
-        // Register HUD rendering with defensive exception boundary
-        HudRenderCallback.EVENT.register((drawContext, renderTickCounter) -> {
-            if (this.hudOverlay != null) {
-                try {
-                    this.hudOverlay.render(drawContext, renderTickCounter);
-                } catch (Throwable t) {
-                    LOGGER.debug("[{}] Render HUD overlay exception: {}", MOD_NAME, t.getMessage());
+            // Register unified client tick event (keybinds polled before placement engine tick; paused check)
+            ClientTickEvents.END_CLIENT_TICK.register(client -> {
+                if (client.isPaused()) {
+                    return;
                 }
-            }
-        });
+                if (client.world != null && client.player != null) {
+                    ClientKeybindHandler.onClientTick(client);
+                    this.placementEngine.onClientTick(client);
+                }
+            });
 
-        LOGGER.info("[{}] Successfully loaded and ready!", MOD_NAME);
+            // Register world transition listeners to reset inventory cache and queue stats
+            ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+                if (this.placementEngine != null) {
+                    LOGGER.info("[{}] Resetting placement engine & inventory cache on server disconnect.", MOD_NAME);
+                    this.placementEngine.reset();
+                }
+            });
+
+            ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((client, world) -> {
+                if (this.placementEngine != null) {
+                    LOGGER.info("[{}] Resetting placement engine & inventory cache on world transition.", MOD_NAME);
+                    this.placementEngine.reset();
+                }
+            });
+
+            // Register HUD rendering with defensive exception boundary
+            HudRenderCallback.EVENT.register((drawContext, renderTickCounter) -> {
+                if (this.hudOverlay != null) {
+                    try {
+                        this.hudOverlay.render(drawContext, renderTickCounter);
+                    } catch (Throwable t) {
+                        LOGGER.debug("[{}] Render HUD overlay exception: {}", MOD_NAME, t.getMessage());
+                    }
+                }
+            });
+
+            LOGGER.info("[{}] Successfully loaded and ready!", MOD_NAME);
+        } catch (Throwable t) {
+            LOGGER.error("[{}] Critical error during client initialization: {}", MOD_NAME, t.getMessage(), t);
+        }
     }
 
     public static LitematicaPrinterProMod getInstance() {

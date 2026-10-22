@@ -83,9 +83,10 @@ public class SmartPlacementEngine {
         }
 
         // 2. Sort topologically: Bottom-up (Y ascending), then distance to player
+        Vec3d eyePos = player.getEyePos();
         candidates.sort(Comparator
                 .comparingInt((PlacementCandidate c) -> c.pos.getY())
-                .thenComparingDouble(c -> c.pos.getSquaredDistance(player.getEyePos()))
+                .thenComparingDouble(c -> getSquaredDistance(c.pos, eyePos))
         );
 
         // 3. Execute placement burst
@@ -148,12 +149,13 @@ public class SmartPlacementEngine {
         int r = (int) Math.ceil(range);
 
         Box playerBox = player.getBoundingBox();
+        Vec3d eyePos = player.getEyePos();
 
         for (int dx = -r; dx <= r; dx++) {
             for (int dy = -r; dy <= r; dy++) {
                 for (int dz = -r; dz <= r; dz++) {
                     BlockPos pos = playerPos.add(dx, dy, dz);
-                    if (pos.getSquaredDistance(player.getEyePos()) > rangeSq) {
+                    if (getSquaredDistance(pos, eyePos) > rangeSq) {
                         continue;
                     }
 
@@ -253,5 +255,12 @@ public class SmartPlacementEngine {
             this.missingItems.clear();
         }
         this.inventoryCache.clear();
+    }
+
+    private static double getSquaredDistance(BlockPos pos, Vec3d vec) {
+        double dx = (pos.getX() + 0.5D) - vec.getX();
+        double dy = (pos.getY() + 0.5D) - vec.getY();
+        double dz = (pos.getZ() + 0.5D) - vec.getZ();
+        return dx * dx + dy * dy + dz * dz;
     }
 }
