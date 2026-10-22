@@ -1,0 +1,55 @@
+{
+  "name": "Litematica Printer Pro",
+  "slug": "litematica-printer-pro",
+  "summary": "High-performance intelligent auto-placement companion mod for Litematica with Carpet protocol, 64-block reach, and inventory caching.",
+  "project_types": ["mod"],
+  "environment": {
+    "client": "required",
+    "server": "unsupported"
+  },
+  "categories": [
+    "utility",
+    "technology"
+  ],
+  "game_versions": [
+    "26.3",
+    "1.21.4"
+  ],
+  "loaders": [
+    "fabric",
+    "quilt"
+  ],
+  "license": {
+    "id": "MIT",
+    "url": "https://github.com/slopggobblercobbler81/litematica-printer-pro/blob/main/LICENSE"
+  },
+  "links": {
+    "source": "https://github.com/slopggobblercobbler81/litematica-printer-pro",
+    "issues": "https://github.com/slopggobblercobbler81/litematica-printer-pro/issues",
+    "releases": "https://github.com/slopggobblercobbler81/litematica-printer-pro/releases"
+  },
+  "dependencies": [
+    {
+      "id": "fabric-api",
+      "type": "required"
+    },
+    {
+      "id": "malilib",
+      "type": "required"
+    },
+    {
+      "id": "litematica",
+      "type": "required"
+    },
+    {
+      "id": "carpet",
+      "type": "optional"
+    }
+  ],
+  "release": {
+    "version": "1.0.0",
+    "version_type": "release",
+    "primary_file": "build/libs/litematica-printer-pro-26.3-1.0.0.jar",
+    "changelog_file": "distribution/RELEASE_NOTES.md"
+  }
+}
