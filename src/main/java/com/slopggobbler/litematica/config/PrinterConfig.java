@@ -136,7 +136,7 @@ public class PrinterConfig {
 
     private void registerConfigOptions() {
         options.add(new BooleanOption("printerEnabled", "Master switch for auto-placement", false));
-        options.add(new DoubleOption("placementRange", "Placement reach range in blocks", 1.0D, 6.0D, 4.5D));
+        options.add(new DoubleOption("placementRange", "Placement reach range in blocks", 1.0D, 64.0D, 4.5D));
         options.add(new IntegerOption("blocksPerTick", "Maximum blocks to place per tick", 1, 20, 3));
         options.add(new IntegerOption("placementIntervalTicks", "Delay between placement cycles in ticks", 0, 20, 1));
         options.add(new BooleanOption("smartRotationEnabled", "Calculate precise orientation vectors for directional blocks", true));

@@ -20,7 +20,7 @@ public class PrinterConfigHandler implements IConfigHandler {
             "printerEnabled", false, "litematica_printer_pro.config.printer_enabled.comment");
 
     public static final ConfigDouble PLACEMENT_RANGE = new ConfigDouble(
-            "placementRange", 4.5D, 1.0D, 6.0D, "litematica_printer_pro.config.placement_range.comment");
+            "placementRange", 4.5D, 1.0D, 64.0D, "litematica_printer_pro.config.placement_range.comment");
 
     public static final ConfigInteger BLOCKS_PER_TICK = new ConfigInteger(
             "blocksPerTick", 3, 1, 20, "litematica_printer_pro.config.blocks_per_tick.comment");

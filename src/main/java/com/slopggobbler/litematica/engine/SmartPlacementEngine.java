@@ -131,6 +131,10 @@ public class SmartPlacementEngine {
             PrinterConfig config
     ) {
         List<PlacementCandidate> list = new ArrayList<>();
+        if (!LitematicaBridge.hasActiveSchematics()) {
+            return list;
+        }
+
         double range = config.getPlacementRange();
         double rangeSq = range * range;
         BlockPos playerPos = player.blockPosition();
@@ -139,13 +143,21 @@ public class SmartPlacementEngine {
         AABB playerBox = player.getBoundingBox();
         Vec3 eyePos = player.getEyePosition();
 
-        for (int dx = -r; dx <= r; dx++) {
-            for (int dy = -r; dy <= r; dy++) {
+        for (int dy = -r; dy <= r; dy++) {
+            double diffY = (playerPos.getY() + dy + 0.5D) - eyePos.y();
+            double dySq = diffY * diffY;
+            if (dySq > rangeSq) continue;
+
+            for (int dx = -r; dx <= r; dx++) {
+                double diffX = (playerPos.getX() + dx + 0.5D) - eyePos.x();
+                double dxSq = diffX * diffX;
+                if (dySq + dxSq > rangeSq) continue;
+
                 for (int dz = -r; dz <= r; dz++) {
+                    double diffZ = (playerPos.getZ() + dz + 0.5D) - eyePos.z();
+                    if (dySq + dxSq + (diffZ * diffZ) > rangeSq) continue;
+
                     BlockPos pos = playerPos.offset(dx, dy, dz);
-                    if (getSquaredDistance(pos, eyePos) > rangeSq) {
-                        continue;
-                    }
 
                     BlockState schematicState = LitematicaBridge.getSchematicBlockState(world, pos);
                     if (schematicState.isAir()) {
