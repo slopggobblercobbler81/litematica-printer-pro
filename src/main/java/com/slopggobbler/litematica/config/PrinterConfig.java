@@ -32,6 +32,7 @@ public class PrinterConfig {
     // Rotation & Protocol settings
     private boolean smartRotationEnabled = true;
     private boolean carpetAccuratePlacement = true;
+    private boolean tuneNoteBlocks = true;
 
     // Inventory & Cache settings
     private boolean inventoryBufferCache = true;
@@ -141,6 +142,7 @@ public class PrinterConfig {
         options.add(new IntegerOption("placementIntervalTicks", "Delay between placement cycles in ticks", 0, 20, 1));
         options.add(new BooleanOption("smartRotationEnabled", "Calculate precise orientation vectors for directional blocks", true));
         options.add(new BooleanOption("carpetAccuratePlacement", "Use Carpet Accurate Placement protocol v2/v3", true));
+        options.add(new BooleanOption("tuneNoteBlocks", "Automatically tune placed note blocks to match schematic pitch", true));
         options.add(new BooleanOption("inventoryBufferCache", "Cache inventory slots for instant hotbar swapping", true));
         options.add(new BooleanOption("breakWrongBlocks", "Break obstructing or incorrectly placed blocks", false));
         options.add(new BooleanOption("strictRaycast", "Require unobstructed line-of-sight to place blocks", false));
@@ -182,6 +184,7 @@ public class PrinterConfig {
             if (json.has("placementIntervalTicks")) this.placementIntervalTicks = json.get("placementIntervalTicks").getAsInt();
             if (json.has("smartRotationEnabled")) this.smartRotationEnabled = json.get("smartRotationEnabled").getAsBoolean();
             if (json.has("carpetAccuratePlacement")) this.carpetAccuratePlacement = json.get("carpetAccuratePlacement").getAsBoolean();
+            if (json.has("tuneNoteBlocks")) this.tuneNoteBlocks = json.get("tuneNoteBlocks").getAsBoolean();
             if (json.has("inventoryBufferCache")) this.inventoryBufferCache = json.get("inventoryBufferCache").getAsBoolean();
             if (json.has("breakWrongBlocks")) this.breakWrongBlocks = json.get("breakWrongBlocks").getAsBoolean();
             if (json.has("strictRaycast")) this.strictRaycast = json.get("strictRaycast").getAsBoolean();
@@ -210,6 +213,7 @@ public class PrinterConfig {
             json.addProperty("placementIntervalTicks", this.placementIntervalTicks);
             json.addProperty("smartRotationEnabled", this.smartRotationEnabled);
             json.addProperty("carpetAccuratePlacement", this.carpetAccuratePlacement);
+            json.addProperty("tuneNoteBlocks", this.tuneNoteBlocks);
             json.addProperty("inventoryBufferCache", this.inventoryBufferCache);
             json.addProperty("breakWrongBlocks", this.breakWrongBlocks);
             json.addProperty("strictRaycast", this.strictRaycast);
@@ -291,4 +295,10 @@ public class PrinterConfig {
 
     public int getHudPosY() { return hudPosY; }
     public void setHudPosY(int hudPosY) { this.hudPosY = hudPosY; }
+
+    public boolean isTuneNoteBlocks() { return tuneNoteBlocks; }
+    public void setTuneNoteBlocks(boolean tuneNoteBlocks) {
+        this.tuneNoteBlocks = tuneNoteBlocks;
+        saveConfig();
+    }
 }

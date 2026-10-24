@@ -42,6 +42,9 @@
   "litematica_printer_pro.config.show_hud": "Show Printer HUD",
   "litematica_printer_pro.config.show_hud.comment": "Displays placement speed, queue depth, and printer status on screen.",
 
+  "litematica_printer_pro.config.tune_noteblocks": "Auto Tune Note Blocks",
+  "litematica_printer_pro.config.tune_noteblocks.comment": "Automatically tune placed note blocks to match schematic pitch.",
+
   "key.litematica_printer_pro.category": "Litematica Printer Pro",
   "key.litematica_printer_pro.toggle_printer": "Toggle Printer Active",
   "key.litematica_printer_pro.open_config": "Open Printer Configuration GUI",

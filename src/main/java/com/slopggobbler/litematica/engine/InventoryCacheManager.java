@@ -3,6 +3,7 @@ package com.slopggobbler.litematica.engine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.Item;
@@ -16,6 +17,8 @@ import java.util.Map;
 
 /**
  * High-performance inventory slot caching and hotbar buffer manager on Minecraft 26.3.
+ * Synchronizes carried item packets with the server to prevent slot desynchronization
+ * and incorrect block placement.
  */
 public class InventoryCacheManager {
     private final Map<Item, Integer> hotbarSlotCache = new HashMap<>();
@@ -24,7 +27,7 @@ public class InventoryCacheManager {
     private int lastScanTick = -1;
 
     public void updateCache(LocalPlayer player, int currentTick) {
-        if (lastScanTick == currentTick) {
+        if (currentTick >= 0 && lastScanTick == currentTick) {
             return;
         }
         lastScanTick = currentTick;
@@ -65,6 +68,7 @@ public class InventoryCacheManager {
     }
 
     public Item getRequiredItem(BlockState state) {
+        if (state == null) return null;
         Block block = state.getBlock();
         return block.asItem();
     }
@@ -79,16 +83,26 @@ public class InventoryCacheManager {
             return true;
         }
 
+        // Check if the item is present in hotbar (slots 0-8)
         if (hotbarSlotCache.containsKey(requiredItem)) {
             int targetHotbarSlot = hotbarSlotCache.get(requiredItem);
-            player.getInventory().setSelectedSlot(targetHotbarSlot);
-            return true;
+            if (player.getInventory().getSelectedSlot() != targetHotbarSlot) {
+                player.getInventory().setSelectedSlot(targetHotbarSlot);
+                if (player.connection != null) {
+                    player.connection.send(new ServerboundSetCarriedItemPacket(targetHotbarSlot));
+                }
+            }
+            return player.getMainHandItem().is(requiredItem);
         }
 
+        // Check if item needs to be swapped into hotbar from main inventory
         if (inventorySlotCache.containsKey(requiredItem)) {
             int invSlot = inventorySlotCache.get(requiredItem);
-            swapToHotbar(client, player, invSlot, player.getInventory().getSelectedSlot());
-            return true;
+            int currentHotbar = player.getInventory().getSelectedSlot();
+            swapToHotbar(client, player, invSlot, currentHotbar);
+            // Invalidate cache and yield this tick so server has time to acknowledge container swap
+            updateCache(player, -1);
+            return false;
         }
 
         return false;
@@ -109,7 +123,7 @@ public class InventoryCacheManager {
 
     public boolean hasItem(BlockState state) {
         Item item = getRequiredItem(state);
-        return hotbarSlotCache.containsKey(item) || inventorySlotCache.containsKey(item);
+        return item != null && (hotbarSlotCache.containsKey(item) || inventorySlotCache.containsKey(item));
     }
 
     public int getShulkerStockCount(Item item) {

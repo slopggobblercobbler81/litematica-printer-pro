@@ -46,6 +46,9 @@ public class PrinterConfigHandler implements IConfigHandler {
     public static final ConfigBoolean SHOW_HUD = new ConfigBoolean(
             "showHud", false, "litematica_printer_pro.config.show_hud.comment");
 
+    public static final ConfigBoolean TUNE_NOTEBLOCKS = new ConfigBoolean(
+            "tuneNoteBlocks", true, "litematica_printer_pro.config.tune_noteblocks.comment");
+
     public static final List<IConfigBase> OPTIONS = new ArrayList<>();
 
     static {
@@ -59,6 +62,19 @@ public class PrinterConfigHandler implements IConfigHandler {
         OPTIONS.add(BREAK_WRONG);
         OPTIONS.add(STRICT_RAYCAST);
         OPTIONS.add(SHOW_HUD);
+        OPTIONS.add(TUNE_NOTEBLOCKS);
+
+        PRINTER_ENABLED.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        PLACEMENT_RANGE.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        BLOCKS_PER_TICK.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        PLACEMENT_INTERVAL_TICKS.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        SMART_ROTATION.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        CARPET_ACCURATE.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        INVENTORY_BUFFER.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        BREAK_WRONG.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        STRICT_RAYCAST.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        SHOW_HUD.setValueChangeCallback(cfg -> getInstance().syncToInternal());
+        TUNE_NOTEBLOCKS.setValueChangeCallback(cfg -> getInstance().syncToInternal());
     }
 
     public static PrinterConfigHandler getInstance() {
@@ -89,6 +105,7 @@ public class PrinterConfigHandler implements IConfigHandler {
         BREAK_WRONG.setBooleanValue(c.isBreakWrongBlocks());
         STRICT_RAYCAST.setBooleanValue(c.isStrictRaycast());
         SHOW_HUD.setBooleanValue(c.isShowHud());
+        TUNE_NOTEBLOCKS.setBooleanValue(c.isTuneNoteBlocks());
     }
 
     public void syncToInternal() {
@@ -103,5 +120,6 @@ public class PrinterConfigHandler implements IConfigHandler {
         c.setBreakWrongBlocks(BREAK_WRONG.getBooleanValue());
         c.setStrictRaycast(STRICT_RAYCAST.getBooleanValue());
         c.setShowHud(SHOW_HUD.getBooleanValue());
+        c.setTuneNoteBlocks(TUNE_NOTEBLOCKS.getBooleanValue());
     }
 }

@@ -62,7 +62,8 @@ def main():
     # Package the JAR
     jar_litebuilder = os.path.join(root, 'build', 'libs', 'litebuilder-1.0.0.jar')
     jar_litebuilder_263 = os.path.join(root, 'build', 'libs', 'litebuilder-26.3-1.0.0.jar')
-    jar_printer_compat = os.path.join(root, 'build', 'libs', 'litematica-printer-pro-26.3-1.0.0.jar')
+    jar_printer_compat_263 = os.path.join(root, 'build', 'libs', 'litematica-printer-pro-26.3-1.0.0.jar')
+    jar_printer_compat = os.path.join(root, 'build', 'libs', 'litematica-printer-pro-1.0.0.jar')
     mc_mods_jar = os.path.join(mods_dir, 'litebuilder-26.3-1.0.0.jar')
     mc_mods_printer = os.path.join(mods_dir, 'litematica-printer-pro-26.3-1.0.0.jar')
     os.makedirs(os.path.dirname(jar_litebuilder), exist_ok=True)
@@ -89,6 +90,7 @@ def main():
             zf.write(license_path, 'LICENSE_litebuilder')
 
     shutil.copyfile(jar_litebuilder, jar_litebuilder_263)
+    shutil.copyfile(jar_litebuilder, jar_printer_compat_263)
     shutil.copyfile(jar_litebuilder, jar_printer_compat)
     shutil.copyfile(jar_litebuilder, mc_mods_jar)
     shutil.copyfile(jar_litebuilder, mc_mods_printer)
@@ -99,6 +101,7 @@ def main():
         f.write(f"{h}  litebuilder-1.0.0.jar\n")
         f.write(f"{h}  litebuilder-26.3-1.0.0.jar\n")
         f.write(f"{h}  litematica-printer-pro-26.3-1.0.0.jar\n")
+        f.write(f"{h}  litematica-printer-pro-1.0.0.jar\n")
 
     print(f"Packaged JAR successfully! SHA256: {h}")
     print(f"Deployed to: {mc_mods_jar}")

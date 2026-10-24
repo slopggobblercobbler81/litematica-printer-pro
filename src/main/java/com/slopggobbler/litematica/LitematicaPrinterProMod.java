@@ -42,6 +42,7 @@ public class LitematicaPrinterProMod implements ClientModInitializer {
             // Register PrinterConfigHandler & Config Screen with MaLiLib if available
             try {
                 fi.dy.masa.malilib.config.ConfigManager.getInstance().registerConfigHandler(MOD_ID, PrinterConfigHandler.getInstance());
+                PrinterConfigHandler.getInstance().syncFromInternal();
                 Registry.CONFIG_SCREEN.registerConfigScreenFactory(new ModInfo(MOD_ID, MOD_NAME, () ->
                         new GuiModConfigs(MOD_ID, PrinterConfigHandler.OPTIONS, MOD_NAME)));
                 LOGGER.info("[{}] Registered PrinterConfigHandler & ConfigScreen with MaLiLib.", MOD_NAME);
