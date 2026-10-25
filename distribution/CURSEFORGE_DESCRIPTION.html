@@ -1,35 +1,34 @@
-<h2>⚡ LiteBuilder (Litematica Printer Pro)</h2>
-<p><strong>LiteBuilder</strong> is a high-performance, client-side Fabric mod that adds intelligent automatic block placement for schematics loaded through <strong>Litematica</strong>. It places blocks matching the schematic outline as you move around, with support for directional block rotation, redstone state adjustment, note block pitch tuning, configurable reach, and inventory restocking.</p>
+<h2>LiteBuilder</h2>
+<p>LiteBuilder is a client-side Fabric mod that adds automatic block placement for schematics loaded through Litematica. It places blocks matching the schematic outline as you move around, with support for directional block rotation protocols, configurable reach, and inventory restocking.</p>
 
 <hr/>
 
-<h3>🌟 Key Features</h3>
+<h3>Features</h3>
 <ul>
-  <li><strong>Intelligent Auto-Placement:</strong> Support-aware bottom-to-top placement that respects foundation dependencies before placing fragile blocks (torches, redstone wire, repeaters, rails, ladders).</li>
-  <li><strong>Directional Smart Rotation:</strong> Correctly places repeaters, comparators, observers, pistons, sticky pistons, dispensers, droppers, crafters, stairs, slabs, and chests using precise player orientation spoofing.</li>
-  <li><strong>🎵 Note Block Pitch Tuning:</strong> Automatically right-clicks placed note blocks to match schematic pitch (0 to 24 notes). Perfect for noteblock song machines and redstone music engines!</li>
-  <li><strong>⏱️ Redstone State Adjustment:</strong> Automatically cycles repeater delays (1–4 ticks), toggles comparator modes (Compare vs Subtract), and adjusts daylight detectors, levers, and doors/gates in-place.</li>
-  <li><strong>🛡️ Anti-Thrashing Inventory Batching:</strong> Groups placements by item ID and synchronizes hotbar slots via network packets before placing, preventing ghost blocks and accidental item swapping.</li>
-  <li><strong>🌐 Carpet Protocol &amp; Vanilla Fallback:</strong> Full support for Carpet Accurate Placement protocol v2 and v3, with safe coordinate fallback for vanilla servers.</li>
-  <li><strong>Configurable Reach &amp; Speed:</strong> Placement reach up to 64.0 blocks and speeds from 1 to 20 blocks per tick.</li>
-  <li><strong>🧹 Break Wrong Blocks (Optional):</strong> Automatically removes incorrectly placed or obstructing blocks to re-place them with correct orientation.</li>
-  <li><strong>In-Game Configuration:</strong> Configurable through MaLiLib's in-game config menu (<strong>M + C</strong>) or Mod Menu.</li>
+  <li><strong>Schematic placement:</strong> Automatically places blocks from your hotbar or inventory matching your loaded Litematica schematic.</li>
+  <li><strong>Directional block rotation:</strong> Correctly places stairs, slabs, observers, pistons, hoppers, and trapdoors using appropriate hit angles.</li>
+  <li><strong>Accurate placement protocol:</strong> Supports the Carpet / Masa Accurate Block Placement protocol (v2 and v3) when available on servers, allowing accurate block rotation without needing camera adjustments.</li>
+  <li><strong>Configurable reach:</strong> Placement distance can be adjusted from 1.0 up to 64.0 blocks in the settings.</li>
+  <li><strong>Inventory restocking:</strong> Automatically swaps required items into your hotbar from your main inventory as you build.</li>
+  <li><strong>Support-aware placement:</strong> Builds bottom-to-top and prioritizes solid support blocks before placing dependent blocks like torches, rails, ladders, and redstone components.</li>
+  <li><strong>Actionbar notifications:</strong> Speed changes and toggle status are displayed above the hotbar, leaving your main screen clear.</li>
+  <li><strong>In-game configuration:</strong> Configurable through MaLiLib's in-game config menu (M + C) or Mod Menu.</li>
 </ul>
 
 <hr/>
 
-<h3>🎮 Controls</h3>
+<h3>Controls</h3>
 <ul>
   <li><strong>V:</strong> Toggle automatic placement on or off.</li>
   <li><strong>B:</strong> Cycle placement speed (1, 3, 5, or 10 blocks per tick).</li>
   <li><strong>M + C:</strong> Open the MaLiLib in-game configuration menu.</li>
 </ul>
-<p><em>Keybindings can be remapped in Options &gt; Controls &gt; Key Binds under the LiteBuilder category.</em></p>
+<p>Keybindings can be remapped in Options &gt; Controls &gt; Key Binds under the LiteBuilder category.</p>
 
 <hr/>
 
-<h3>⚙️ Settings</h3>
-<p>Settings can be changed in the in-game menu (<code>M + C</code>) or in <code>.minecraft/config/litebuilder.json</code>:</p>
+<h3>Settings</h3>
+<p>Settings can be changed in the in-game menu or in <code>.minecraft/config/litebuilder.json</code>:</p>
 <ul>
   <li><code>printerEnabled</code> (default: false): Master toggle for automatic placement.</li>
   <li><code>placementRange</code> (default: 4.5, range: 1.0 - 64.0): Reach distance in blocks from the player.</li>
@@ -37,16 +36,14 @@
   <li><code>placementIntervalTicks</code> (default: 1): Delay in ticks between placement cycles.</li>
   <li><code>smartRotationEnabled</code> (default: true): Resolves face hit angles for directional blocks.</li>
   <li><code>carpetAccuratePlacement</code> (default: true): Sends Carpet-compatible placement protocol packets when supported.</li>
-  <li><code>tuneNoteBlocks</code> (default: true): Automatically tunes note blocks to match schematic pitch.</li>
   <li><code>inventoryBufferCache</code> (default: true): Caches inventory slots to minimize lookup overhead during fast placement.</li>
   <li><code>breakWrongBlocks</code> (default: false): Breaks incorrectly placed blocks obstructing the schematic.</li>
   <li><code>strictRaycast</code> (default: false): Enforces line-of-sight checks before placing blocks.</li>
-  <li><code>showHud</code> (default: false): Optional on-screen placement HUD.</li>
 </ul>
 
 <hr/>
 
-<h3>📦 Dependencies</h3>
+<h3>Dependencies</h3>
 <ul>
   <li>Fabric Loader (&gt;= 0.16.0)</li>
   <li>Fabric API</li>
@@ -56,14 +53,10 @@
 
 <hr/>
 
-<h3>🧩 Supported Versions</h3>
-<p>Minecraft 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, and 26.3 on Fabric and Quilt.</p>
+<h3>Supported Versions</h3>
+<p>Minecraft 1.20.1, 1.20.2, 1.20.4, 1.20.6, 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4, and 26.3.</p>
 
 <hr/>
 
-<h3>📜 Source &amp; Issues</h3>
-<ul>
-  <li><a href="https://github.com/slopggobblercobbler81/litematica-printer-pro" target="_blank" rel="noopener">GitHub Repository</a></li>
-  <li><a href="https://github.com/slopggobblercobbler81/litematica-printer-pro/issues" target="_blank" rel="noopener">Issue Tracker</a></li>
-  <li>License: MIT</li>
-</ul>
+<h3>License</h3>
+<p>This project is licensed under the MIT License.</p>
