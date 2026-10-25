@@ -5,8 +5,11 @@ LiteBuilder is a client-side Fabric mod that adds automatic block placement for 
 ## Features
 
 - Schematic placement: Automatically places blocks from your hotbar or inventory matching your loaded Litematica schematic.
-- Directional block rotation: Correctly places stairs, slabs, observers, pistons, hoppers, and trapdoors using appropriate hit angles.
-- Accurate placement protocol: Supports the Carpet / Masa Accurate Block Placement protocol (v2 and v3) when available on servers, allowing accurate block rotation without needing camera adjustments.
+- Directional block rotation: Correctly places repeaters, comparators, observers, pistons, dispensers, droppers, crafters, stairs, slabs, and trapdoors using accurate player angle resolution.
+- Accurate placement protocol: Supports Carpet and Masa Accurate Block Placement protocol (v2 and v3) when available on servers, with automatic fallback to vanilla interaction vectors when Carpet is not installed.
+- Note block tuning: Automatically right-clicks placed note blocks to match schematic pitch (0 to 24), with a dedicated toggle in settings.
+- Block state adjustment: Automatically cycles repeater delays (1 to 4 ticks), toggles comparator modes (Compare vs Subtract), daylight detector inverted states, and door, trapdoor, and fence gate states in-place.
+- Batch placement: Batches placements by item type and synchronizes hotbar slots via packets to prevent slot thrashing and wrong block placement during rapid building.
 - Configurable reach: Placement distance can be adjusted from 1.0 up to 64.0 blocks in the settings.
 - Inventory restocking: Automatically swaps required items into your hotbar from your main inventory as you build.
 - Support-aware placement: Builds bottom-to-top and prioritizes solid support blocks before placing dependent blocks like torches, rails, ladders, and redstone components.
@@ -31,9 +34,11 @@ Settings can be changed in the in-game menu or in `.minecraft/config/litebuilder
 - placementIntervalTicks (default: 1): Delay in ticks between placement cycles.
 - smartRotationEnabled (default: true): Resolves face hit angles for directional blocks.
 - carpetAccuratePlacement (default: true): Sends Carpet-compatible placement protocol packets when supported.
+- tuneNoteBlocks (default: true): Automatically tunes note blocks to match schematic pitch.
 - inventoryBufferCache (default: true): Caches inventory slots to minimize lookup overhead during fast placement.
 - breakWrongBlocks (default: false): Breaks incorrectly placed blocks obstructing the schematic.
 - strictRaycast (default: false): Enforces line-of-sight checks before placing blocks.
+- showHud (default: false): Displays on-screen placement HUD with queue and throughput stats.
 
 ## Dependencies
 
